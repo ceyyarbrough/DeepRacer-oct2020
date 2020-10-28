@@ -11,6 +11,7 @@ def reward_function(params):
 	crash = params['is_offtrack']
 	car_speed = params['speed']
 	car_progress = params['progress']
+	left = params['left_of_center']
 
 
 	
@@ -48,7 +49,15 @@ def reward_function(params):
 		reward *= 0.5
 	
 	#Keeps steering between borders at 1/4 and 0.05 of half of the track
-	if steering > 0 and DISTANCE_FROM_BORDER < 0.25 and DISTANCE_FROM_BORDER > 0.05:
+	if DISTANCE_FROM_BORDER < 0.25 and DISTANCE_FROM_BORDER > 0.05:
+		reward = 1.0
+	
+	#rewards for picking edge closest to center on turns
+	if steering > 0 and left:
+		reward = 1.0
+	elif steering < 0 and left:
+		reward *= 0.8
+	else:
 		reward = 1.0
 
 	#rewards based on speed
