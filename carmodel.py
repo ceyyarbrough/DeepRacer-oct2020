@@ -20,9 +20,10 @@ def reward_function(params):
 	marker_2 = 0.25 * track_width
 	marker_3 = 0.5 * track_width
 
+	#etc variables
 	CRASH_DETECTION = crash
 	ABD_STEERING_THERSHOLD = 12.5
-	DISTANCE_FROM_BORDER = .5 * track_width - distance_from_center
+	DISTANCE_FROM_BORDER = 0.5 * track_width - distance_from_center
 	
 	# Give higher reward if the car is closer to center line and vice versa
 	if distance_from_center <= marker_1:
@@ -34,21 +35,29 @@ def reward_function(params):
 	else:
 		reward = 1e-3  # likely crashed/ close to off track
 
-	if all_wheels_on_track and (0.5*track_width - distance_from_center) >= 0.05:
+	#Keeps all wheels on track
+	if all_wheels_on_track:
 		reward = 1.0
 
+	#Keeps steering below threshold of 12.5 degrees
 	if steering > ABD_STEERING_THERSHOLD:
 		reward *= 0.8
 	
+	#Lowers reward when off track
 	if CRASH_DETECTION == True:
 		reward *= 0.5
 	
-	if steering > 0 and DISTANCE_FROM_BORDER < .25 and DISTANCE_FROM_BORDER > .5:
+	#Keeps steering between borders at 1/4 and 0.05 of half of the track
+	if steering > 0 and DISTANCE_FROM_BORDER < 0.25 and DISTANCE_FROM_BORDER > 0.05:
 		reward = 1.0
 
+	#rewards based on speed
 	if car_speed > 3.0 and CRASH_DETECTION == False:
 		reward = 1.0
+	else:
+		reward *= 0.8
 
+	#Rewards car progress
 	if car_progress == 100:
 		reward = 1.0
 	elif car_progress == 50:
@@ -57,4 +66,6 @@ def reward_function(params):
 		reward = 0.1
 	else:
 		reward *= 0.8
+	
+	#provides reward to car model
 	return float(reward)
