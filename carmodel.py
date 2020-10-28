@@ -11,7 +11,7 @@ def reward_function(params):
 	crash = params['is_offtrack']
 	car_speed = params['speed']
 	car_progress = params['progress']
-	left = params['left_of_center']
+	left = params['is_left_of_center']
 
 
 	
