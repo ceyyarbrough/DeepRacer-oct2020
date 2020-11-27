@@ -48,7 +48,7 @@ def reward_function(params):
 		reward *= 1.2
 	elif steering < 0 and left:
 		reward *= 0.8
-	elif steering == 0 and track_width = 0.5:
+	elif steering == 0 and track_width == 0.5:
 		reward *= 1.1
 	else:
 		reward *= 1.0
